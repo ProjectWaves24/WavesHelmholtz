@@ -1,1 +1,208 @@
 
+This directory contains four different C++/PETSc solvers for solution of Helmholtz equation  in 2D and 3D and
+two Matlab programs which solve the Dirichlet problem  for Helmholtz equation in 2D and 3D.
+C++/PETSc programs were modified  from original code availabe at
+
+https://github.com/ProjectWaves24/WavesHelmholtz/
+
+and developed  further in a Master thesis project with the title 
+"Efficient implementation of the Helmholtz equation in 3D" authored by René Köhle
+
+It is possible to visualize the results with the viewer files, for the 2D/3D case the filename for the nodes need to be set.
+**********************************************************
+
+1) The first solver computes the solution of the Helmholtz equation in 2D and indicates if there are problems with resonance frequencies and how many points per wavelength are used:
+
+For compilation use:
+
+make -f makefileconv_v2 runconv2
+
+To run:
+
+>runconv2 argv[1]  argv[2] argv[3] argv[4]
+
+argv[1] - number of preconditioner (1 - Jacobi, 2 - Gauss-Seidel, 3 - SOR, 4 - alg. Multigrid, 5 - add. schwarz, 6 - inc. Cholesky, 7 - no precond. )
+
+argv[2]  - number of nodes in x and y directions 
+
+argv[3] - frequency omega
+
+argv[4] - alpha of the damping term
+
+
+% number of nodes for meshes in convergence tests:
+%  l= 9; h= 0.001953125 = 1/2^9  ---> nx = ny = 1/h +1 = 513
+%  l= 8; h= 0.00390625 = 1/2^8  ---> nx = ny = 1/h +1 = 257
+%  l= 7; h= 0.0078125 = 1/2^7  ---> nx = ny = 1/h +1 = 129
+%  l= 6; h= 0.015625 = 1/2^6  ---> nx = ny = 1/h +1 = 65
+%  l= 5; h =    0.03125 = 1/2^5 ---> nx = ny = 1/h + 1 = 33
+%  l= 4; h =  0.0625 = 1/2^4   ---> nx = ny = 1/h + 1 = 17
+%  l= 3 ; h = 0.125 = 1/(2^3) ----> nx = ny = 1/h + 1 = 9
+  
+The C++/PETSc code  computes finite difference approximation for the test problem
+
+Δu(x,y)+ omega^2*epsilon*u(x,y) = f(x,y)  in (0, 1) x (0, 1) =: D,
+		
+	       u = 0  on dD,
+
+with
+
+f(x, y) = -(8*pi^2)*sin(2*pi*x)*sin(2*pi*y) - 2i*x*(1-x) - 2i*y*(1-y)
+	  +omega*omega*epsilon(x)*(sin(2*pi*x)*sin(2*pi*y) +
+	  i*x*(1 - x)*y*(1 - y))
+
+
+with the exact solution
+
+u(x, y) = sin(2*pi*x)*sin(2*pi*y) + i*x*(1 - x)*y*(1 - y).
+
+and epsilon(x,y) =  2*exp(-((x-x_0)*(x-x_0)/(2*c_x*c_x) +(y-y_0)*(y-y_0)/(2*c_y*c_y)))
+
+
+
+Output: nodes.m, values.m, values_exact.m, residual.m containing a list of the nodes, and corresponding real and imaginary parts of the approximation, respectively. For the computed solution, the residual and the exact values the number of discr. points is included in the fielname.
+
+
+**********************************************************************************************************
+2) The second solver computes the solution of the Helmholtz equation in 2D and indicates  how many points per wavelength are used, the matrix storage is MatCreateSeqAIJ and VecCreateSeq instead.
+
+For compilation use:
+
+make -f makefiletest2copy runconv2testcopy
+
+To run:
+
+>runconv2testcopy argv[1] argv[2] argv[3] argv[4]
+
+argv[1] - number of preconditioner (1 - Jacobi, 2 - Gauss-Seidel, 3 - SOR, 4 - alg. Multigrid, 5 - add. schwarz, 6 - inc. Cholesky, 7 - no precond. )
+
+argv[2]  - number of nodes in x and y directions 
+
+argv[3] - frequency omega
+
+argv[4] - alpha of the damping term
+
+
+% number of nodes for meshes in convergence tests:
+%  l= 9; h= 0.001953125 = 1/2^9  ---> nx = ny = 1/h +1 = 513
+%  l= 8; h= 0.00390625 = 1/2^8  ---> nx = ny = 1/h +1 = 257
+%  l= 7; h= 0.0078125 = 1/2^7  ---> nx = ny = 1/h +1 = 129
+%  l= 6; h= 0.015625 = 1/2^6  ---> nx = ny = 1/h +1 = 65
+%  l= 5; h =    0.03125 = 1/2^5 ---> nx = ny = 1/h + 1 = 33
+%  l= 4; h =  0.0625 = 1/2^4   ---> nx = ny = 1/h + 1 = 17
+%  l= 3 ; h = 0.125 = 1/(2^3) ----> nx = ny = 1/h + 1 = 9
+  
+The C++/PETSc code  computes finite difference approximation for the test problem
+
+Δu(x,y)+ omega^2*epsilon*u(x,y) = f(x,y)  in (0, 1) x (0, 1) =: D,
+		
+	       u = 0  on dD,
+
+with
+
+f(x, y) = -(8*pi^2)*sin(2*pi*x)*sin(2*pi*y) - 2i*x*(1-x) - 2i*y*(1-y)
+	  +omega*omega*epsilon(x)*(sin(2*pi*x)*sin(2*pi*y) +
+	  i*x*(1 - x)*y*(1 - y))
+
+
+with the exact solution
+
+u(x, y) = sin(2*pi*x)*sin(2*pi*y) + i*x*(1 - x)*y*(1 - y).
+
+and epsilon(x,y) =  2*exp(-((x-x_0)*(x-x_0)/(2*c_x*c_x) +(y-y_0)*(y-y_0)/(2*c_y*c_y)))
+
+
+
+Output: nodes.m, values.m, values_exact.m, residual.m containing a list of the nodes, and corresponding real and imaginary parts of the approximation, respectively. For the computed solution, the residual and the exact values the number of discr. points is included in the fielname.
+
+***************************************************************************************************************
+
+3) The third solver computes the solution of the Helmholtz equation in 3D and indicates  how many points per wavelength are used. The matrix storage is MatCreateSeqAIJ and VecCreateSeq is used since it is much faster in 3D than the one from solver 1. Since the dimensions are growing so rapidly l = 6 is the max. dimesnion. 
+
+For compilation use:
+
+make -f makefileconv2new runconv2new
+
+To run:
+
+>runconv2new argv[1] argv[2] argv[3] argv[4]
+
+argv[1] - number of preconditioner (1 - Jacobi, 2 - Gauss-Seidel, 3 - SOR, 4 - alg. Multigrid, 5 - add. schwarz, 6 - inc. Cholesky, 7 - no precond. )
+
+argv[2]  - number of nodes in x and y and z directions 
+
+argv[3] - frequency omega
+
+argv[4] - alpha of the damping term
+
+
+% number of nodes for meshes in convergence tests:
+%  l= 6; h= 0.015625 = 1/2^6  ---> nx = ny = 1/h +1 = 65
+%  l= 5; h =    0.03125 = 1/2^5 ---> nx = ny = 1/h + 1 = 33
+%  l= 4; h =  0.0625 = 1/2^4   ---> nx = ny = 1/h + 1 = 17
+%  l= 3 ; h = 0.125 = 1/(2^3) ----> nx = ny = 1/h + 1 = 9
+  
+h=[0.015625, 0.03125, 0.0625, 0.125];
+The C++/PETSc code  computes finite difference approximation for the test problem
+
+Δu(x,y,z)+ omega^2*epsilon*u(x,y,z) = f(x,y,z)  in (0, 1) x (0, 1) =: D,
+		
+	       u = 0  on dD,
+
+with
+
+f(x, y, z) = -(12*pi*pi)*sin(2*pi*x)*sin(2*pi*y)*sin(2*pi*z)+ omega^2*epsilon(x,y,z)*(sin(2*pi*x)*sin(2*pi*y)*sin(2*pi*z)) -2*i*(x*(1-x)*y*(1-y) + x*(1-x)*z*(1-z) +y*(1-y)*z*(1-z))+ i*omega^2*epsilon(x,y,z)*x*(1-x)*y*(1-y)*z*(1-z)
+
+
+with the exact solution
+
+u(x, y, z) = sin(2*pi*x)*sin(2*pi*y)*sin(2*pi*z) + i*x*(1 - x)*y*(1 - y)*z*(1-z)
+
+and epsilon(x,y,z) =  2*exp(-((x-x_0)*(x-x_0)/(2*c_x*c_x) +(y-y_0)*(y-y_0)/(2*c_y*c_y) + (z-z_0)*(z-z_0)/(2*c_z*c_z)))
+
+
+
+Output: nodes.m, values.m, values_exact.m, residual.m containing a list of the nodes, and corresponding real and imaginary parts of the approximation, respectively. For the computed solution, the residual and the exact values the number of discr. points is included in the fielname.
+
+***************************************************************************************************************
+
+4)
+The input is a 4 digit number which should contain only 0 and 1. 
+2 is a Dirichlet Boundary
+1 is a Neumann Boundary
+for the Dirichhlet case, the Boundary equals 0
+
+**********************************************************
+
+For compilation use:
+
+make -f makefile_neudiri runneumdir
+
+
+To run solver:
+
+./runneumdir argv[1]  argv[2] argv[3] argv[4]
+
+argv[1] - number of preconditioner (1 - Jacobi, 2 - Gauss-Seidel, 3 - SOR )
+
+argv[2] - number of nodes in x and y directions 
+
+argv[3] - frequency omega
+
+argv[4] - specific boundary conditions 
+
+The 4 digit Number for the boundary condition gets convertet to a string and we use 4 ints for every boundary condition which are zero initialized. If we have a 0 in the sequence we do not change the value for the boundary sequence, if there is a 1 we change the value to one.
+
+
+For every corner we look if one of the adjacent edges is a dirichlet Boundary condition and 
+if this is the case, we set the value of the edge to zero. Otherwise we have a Neumann edge.
+
+For every node on the edge we check on which boundary we are. After that we check if we have a Neumann or Dirchlet boundary. If we have a Neumann Boundary we set the values accordingly if not we set the values to zero. We check that for every edge.
+
+IMPORTANT NOTE: At the moment we do not get a specific solution for the case when we schould have only one edge on the right side. Instead we get two times the upper edge as a result.
+
+To visualize:
+matlab -nodesktop -r viewer
+(starts Matlab in terminal and runs the visualization script).
+
+
