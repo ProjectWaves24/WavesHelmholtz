@@ -1,1 +1,13 @@
+The directory contains  C++/PETSc   programs for solution of
+Helmholtz equation in 2D used for all computations and results
+ presented in the Bachelor thesis entitled 
+"Efficient implementation of Helmholtz equation   with applications in medical imaging", 2024, written by
 
+Basel Hammudeh
+Daniel Reehorst Lyrstrand
+Hannah Lindmossen
+Homam Mowed
+
+Swedish title:
+
+"Effektiv implementering av Helmholtz ekvation med applikationer inom medicinsk bildbehanding"
